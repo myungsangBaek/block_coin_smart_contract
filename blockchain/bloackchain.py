@@ -29,6 +29,20 @@ class Blockchain:
         self.chain.append(block)
         return block
 
-# Mining Blockchain
     def get_previous_block(self):
         return self.chain[-1]
+
+    # 작업 증명 함수 -  작업 증명은 채굴하기 위해 찾아내는 숫자이다.
+    def proof_of_work(self, previous_proof):
+        new_proof = 1
+        check_proof = False,
+        while check_proof is False:
+            # 해시 연산 - 비대칭으로 이루어진다
+            hash_operation = hashlib.sha256(
+                str(new_proof**2 - previous_proof**2).encode()).hexdigest()
+            if (hash_operation[:4] == '0000'):
+                check_proof = True
+            else:
+                new_proof += 1
+        return new_proof
+# Mining Blockchain
