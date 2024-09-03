@@ -39,10 +39,15 @@ class Blockchain:
         while check_proof is False:
             # 해시 연산 - 비대칭으로 이루어진다
             hash_operation = hashlib.sha256(
+                # hexdigest - 16진수 표현
                 str(new_proof**2 - previous_proof**2).encode()).hexdigest()
             if (hash_operation[:4] == '0000'):
                 check_proof = True
             else:
                 new_proof += 1
         return new_proof
+
+    def hash(self, block):
+        encoded_block = json.dumps(block, sort_keys=True).encode()
+        return hashlib.sha256(encoded_block).hexdigest()
 # Mining Blockchain
