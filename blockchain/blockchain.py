@@ -36,13 +36,13 @@ class Blockchain:
     # 작업 증명 함수 -  작업 증명은 채굴하기 위해 찾아내는 숫자이다.
     def proof_of_work(self, previous_proof):
         new_proof = 1
-        check_proof = False,
+        check_proof = False
         while check_proof is False:
             # 해시 연산 - 비대칭으로 이루어진다
             hash_operation = hashlib.sha256(
                 # hexdigest - 16진수 표현
                 str(new_proof**2 - previous_proof**2).encode()).hexdigest()
-            if (hash_operation[:4] == '0000'):
+            if hash_operation[:4] == '0000':
                 check_proof = True
             else:
                 new_proof += 1
@@ -60,7 +60,7 @@ class Blockchain:
             block = chain[block_index]
             if block['previous_hash'] != self.hash(previous_block):
                 return False
-            previous_proof = previous_block('proof')
+            previous_proof = previous_block['proof']
             proof = block['proof']
             hash_operation = hashlib.sha256(
                 str(proof**2 - previous_proof**2).encode()).hexdigest()
@@ -69,6 +69,7 @@ class Blockchain:
             previous_block = block
             block_index += 1
         return True
+
 
 # Mining Blockchain
 
@@ -104,5 +105,19 @@ def get_chain():
     }
     return jsonify(response), 200
 
+# Checking if the Blockchain is valid
 
-app.run(host='0.0.0.0', port=5000)
+
+@app.route('/is_valid', methods=['GET'])
+def is_valid():
+    is_valid = blockchain.is_chain_valid(blockchain.chain)
+    if is_valid:
+        response = {'message': 'All good. The Blockchain is valid.'}
+    else:
+        response = {
+            'message': 'Houston, we have a problem. The Blockchain is not valid.'}
+    return jsonify(response), 200
+
+
+# 네트워크 전체공개
+app.run(host='0.0.0.0', port=3000)
