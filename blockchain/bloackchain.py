@@ -17,3 +17,18 @@ class Blockchain:
         self.chain = []
         # 첫 블록이라 previous_hash 없음
         self.create_block(proof=1, previous_hash='0')
+
+    # 객체의 변수를 사용하기에 self 필요
+    def create_block(self, proof, previous_hash):
+        block = {
+            'index': len(self.chain) + 1,
+            'timestamp': str(datetime.datetime.now()),
+            'proof': proof,
+            'previous_hash': previous_hash,
+        }
+        self.chain.append(block)
+        return block
+
+# Mining Blockchain
+    def get_previous_block(self):
+        return self.chain[-1]
